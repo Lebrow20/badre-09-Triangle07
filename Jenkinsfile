@@ -47,10 +47,18 @@ pipeline {
     }
 
     post {
-        always {
+        success {
             emailext(
-                subject: "Jenkins Build ${BUILD_NUMBER}",
-                body: "Le build est terminé avec le statut : ${currentBuild.currentResult}",
+                subject: "Build SUCCESS - ${JOB_NAME}",
+                body: "Build ${BUILD_NUMBER} SUCCESS",
+                to: "nyavofanilo.rabe@gmail.com"
+            )
+        }
+
+        failure {
+            emailext(
+                subject: "Build FAILED - ${JOB_NAME}",
+                body: "Build ${BUILD_NUMBER} FAILED",
                 to: "nyavofanilo.rabe@gmail.com"
             )
         }
