@@ -43,4 +43,22 @@ pipeline {
             }
         }
     }
+
+    post {
+        failure {
+            emailext(
+                subject: "Jenkins Build Failed",
+                body: "Le build ${BUILD_NUMBER} a échoué.",
+                to: "nyavofanilo.rabe@gmail.com"
+            )
+        }
+
+        success {
+            emailext(
+                subject: "Jenkins Build Success",
+                body: "Le build ${BUILD_NUMBER} a réussi.",
+                to: "nyavofanilo.rabe@gmail.com"
+            )
+        }
+    }
 }
