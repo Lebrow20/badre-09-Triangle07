@@ -47,18 +47,10 @@ pipeline {
     }
 
     post {
-        success {
+        always {
             emailext(
-                subject: "Build SUCCESS - ${JOB_NAME}",
-                body: "Build ${BUILD_NUMBER} SUCCESS",
-                to: "nyavofanilo.rabe@gmail.com"
-            )
-        }
-
-        failure {
-            emailext(
-                subject: "Build FAILED - ${JOB_NAME}",
-                body: "Build ${BUILD_NUMBER} FAILED",
+                subject: "TEST EMAIL",
+                body: "Test pipeline email",
                 to: "nyavofanilo.rabe@gmail.com"
             )
         }
