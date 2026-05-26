@@ -9,8 +9,7 @@ pipeline {
 
         stage('Git Checkout') {
             steps {
-                git credentialsId: 'git_credentials',
-                    url: 'https://github.com/Lebrow20/badre-09-Triangle07.git'
+                git url: 'https://github.com/Lebrow20/badre-09-Triangle07.git'
             }
         }
 
@@ -28,16 +27,15 @@ pipeline {
 
         stage('Docker Build & Push') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+
+                withCredentials([
+                    string(credentialsId: 'dockerhub', variable: 'DOCKER_PASS')
+                ]) {
 
                     bat '''
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                        docker build -t %DOCKER_USER%/triang7:1.0.0 .
-                        docker push %DOCKER_USER%/triang7:1.0.0
+                        echo %DOCKER_PASS% | docker login -u fanilonyavo --password-stdin
+                        docker build -t fanilonyavo/triang7:1.0.0 .
+                        docker push fanilonyavo/triang7:1.0.0
                     '''
                 }
             }
@@ -45,18 +43,10 @@ pipeline {
     }
 
     post {
-        failure {
+        always {
             emailext(
-                subject: "Jenkins Build Failed",
-                body: "Le build ${BUILD_NUMBER} a échoué.",
-                to: "nyavofanilo.rabe@gmail.com"
-            )
-        }
-
-        success {
-            emailext(
-                subject: "Jenkins Build Success",
-                body: "Le build ${BUILD_NUMBER} a réussi.",
+                subject: "Jenkins Build ${BUILD_NUMBER}",
+                body: "Le build est terminé avec le statut : ${currentBuild.currentResult}",
                 to: "nyavofanilo.rabe@gmail.com"
             )
         }
