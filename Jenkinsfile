@@ -29,11 +29,15 @@ pipeline {
             steps {
 
                 withCredentials([
-                    string(credentialsId: 'dockerhub', variable: 'DOCKER_PASS')
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
                 ]) {
 
                     bat '''
-                        echo %DOCKER_PASS% | docker login -u fanilonyavo --password-stdin
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
                         docker build -t fanilonyavo/triang7:1.0.0 .
                         docker push fanilonyavo/triang7:1.0.0
                     '''
